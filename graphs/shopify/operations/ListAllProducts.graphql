@@ -1,0 +1,19 @@
+# Retrieves a list of products including their IDs, titles, descriptions, and prices.
+query PaginateThroughProducts($numberOfProductVariantsToTake: Int = 10) {
+ #Sometimes variables require a default value
+ products(first: $numberOfProductVariantsToTake) {
+   edges {
+     product: node {
+       # Aliases
+       id
+       title
+       variants(first: $numberOfProductVariantsToTake) {
+         nodes {
+           title
+           price
+         }
+       }
+     }
+   }
+ }
+}

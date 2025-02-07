@@ -1,0 +1,11 @@
+# Retrieves the details of a specific product by its ID, including the title, description, and price range.
+query getWeatherData($search: String!) {
+    getWeatherData(search: $search) {
+        conditions
+        forecastSnowFall
+        temperature
+        windSpeed
+        currentSnowDepth
+    }
+}
+

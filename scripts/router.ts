@@ -46,8 +46,8 @@ ensureRouterDownloaded().then(routerPath => {
 
     return new Promise<number>((resolve, reject) => {
       const process = spawn(routerPath, [
+        "--dev",
         "--config", "router.yaml",
-        "--apollo-uplink-poll-interval", "10s"
       ], {
         stdio: "inherit",
         cwd: graphDir,
@@ -81,7 +81,7 @@ async function ensureRouterDownloaded() {
     }
 
     const script = await fetch(
-      "https://router.apollo.dev/download/nix/latest"
+      "https://router.apollo.dev/download/nix/v2.0.0-preview.4"
     ).then(res => res.text());
 
     await new Promise<void>((resolve, reject) => {

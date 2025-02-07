@@ -1,5 +1,24 @@
 {
   "format": "apollo-persisted-query-manifest",
   "version": 1,
-  "operations": []
+  "operations": [
+    {
+      "id": "a2cbe6cbf172d753ab554bf868fb440287587ef4bb4a596b2665c862e6e120c5",
+      "name": "GetProduct",
+      "type": "query",
+      "body": "query GetProduct($productId: ID!) {\n  product(id: $productId) {\n    id\n    title\n    description\n    totalInventory\n    priceRangeV2 {\n      maxVariantPrice {\n        amount\n        currencyCode\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+    },
+    {
+      "id": "092a280e0a87ac6acd276248fca6bf40a4699d4bc65a3a2ec7badef5d740687a",
+      "name": "PaginateThroughProducts",
+      "type": "query",
+      "body": "query PaginateThroughProducts($numberOfProductVariantsToTake: Int = 10) {\n  products(first: $numberOfProductVariantsToTake) {\n    edges {\n      product: node {\n        id\n        title\n        variants(first: $numberOfProductVariantsToTake) {\n          nodes {\n            title\n            price\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}"
+    },
+    {
+      "id": "6e43fdf263594f8595d482a703cb8cd70328b193d7d4e3e97eb46cfa31cf3dce",
+      "name": "getWeatherData",
+      "type": "query",
+      "body": "query getWeatherData($search: String!) {\n  getWeatherData(search: $search) {\n    conditions\n    forecastSnowFall\n    temperature\n    windSpeed\n    currentSnowDepth\n    __typename\n  }\n}"
+    }
+  ]
 }

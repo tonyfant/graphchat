@@ -14,3 +14,8 @@ persisted_queries:
     enabled: true
 apq:
   enabled: false
+preview_connectors:
+  subgraphs:
+    conditions:
+      $config:
+        conditionsApiKey: "${env.CONDITIONS_ACCESS_TOKEN}"

@@ -1,0 +1,40 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.10", 
+    )
+  @link(
+    url: "https://specs.apollo.dev/connect/v0.1"
+    import: ["@source", "@connect"]
+  )
+  @source(
+    name: "weatherdata"
+    http: {
+      baseURL: "https://weather.visualcrossing.com/",
+    }
+  )
+
+type Weather {
+  temperature: Float
+  windSpeed: Float
+  conditions: String
+  forecastSnowFall: Float
+  currentSnowDepth: Float
+}
+
+type Query {
+  getWeatherData (search:String!) : Weather
+    @connect(
+        source: "weatherdata"
+        http: { GET: "/VisualCrossingWebServices/rest/services/timeline/{$args.search}?key={$config.conditionsApiKey}&include=current&unitGroup=us" }
+        selection: """
+        $.currentConditions
+        {
+        forecastSnowFall: snow
+        temperature: temp
+        windSpeed: windspeed
+        conditions
+        currentSnowDepth: snowdepth
+        }
+        """
+      )
+}
