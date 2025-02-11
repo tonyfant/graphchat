@@ -1,19 +1,29 @@
 extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.10", 
-    )
-  @link(
-    url: "https://specs.apollo.dev/connect/v0.1"
-    import: ["@source", "@connect"]
-  )
+  @link(url: "https://specs.apollo.dev/federation/v2.10", import: ["@key"])
+  @link(url: "https://specs.apollo.dev/connect/v0.1", import: ["@source", "@connect"])
   @source(
     name: "weatherdata"
     http: {
       baseURL: "https://weather.visualcrossing.com/",
     }
   )
+  @source(
+    name: "trimblemaps"
+    http: {
+      baseURL: "https://singlesearch.alk.com/"
+      headers: [{ name: "Authorization", value: "{$config.locationsApiKey}" }]
+    }
+  )
 
-type Weather {
+type Geo {
+  lat: String!
+  long: String!
+  weather: Weather
+}
+
+type Weather @key(fields: "lat long", resolvable: false) {
+  lat: String!
+  long: String!
   temperature: Float
   windSpeed: Float
   conditions: String
@@ -22,11 +32,31 @@ type Weather {
 }
 
 type Query {
-  getWeatherData (search:String!) : Weather
+    geoByAddress(search: String!): Geo
+        @connect(
+            source: "trimblemaps"
+            http: {
+                GET: "na/api/search?query={$args.search}"
+            }
+            selection: """
+            lat:Locations->first.Coords.Lat
+            long:Locations->first.Coords.Lon
+            weather: {
+                lat:Locations->first.Coords.Lat
+                long:Locations->first.Coords.Lon
+            }
+            """
+        )
+
+  getWeatherData (lat: String!, long: String!) : Weather
     @connect(
         source: "weatherdata"
-        http: { GET: "/VisualCrossingWebServices/rest/services/timeline/{$args.search}?key={$config.conditionsApiKey}&include=current&unitGroup=us" }
+        http: { 
+            GET: "/VisualCrossingWebServices/rest/services/timeline/{$args.lat},{$args.long}?key={$config.conditionsApiKey}&include=current&unitGroup=us" 
+        }
         selection: """
+        lat:$args.lat
+        long:$args.long
         $.currentConditions
         {
         forecastSnowFall: snow
@@ -36,5 +66,6 @@ type Query {
         currentSnowDepth: snowdepth
         }
         """
+        entity: true
       )
 }

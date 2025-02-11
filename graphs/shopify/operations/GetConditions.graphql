@@ -1,11 +1,15 @@
-# Retrieves the details of a specific product by its ID, including the title, description, and price range.
+# Retrieves weather forecast by address. Requires a address search string like city and state
 query getWeatherData($search: String!) {
-    getWeatherData(search: $search) {
-        conditions
-        forecastSnowFall
-        temperature
-        windSpeed
-        currentSnowDepth
+    geoByAddress(search: $search) {
+        lat
+        long
+        weather {
+          conditions
+          forecastSnowFall
+          temperature
+          windSpeed
+          currentSnowDepth
+        }
     }
 }
 

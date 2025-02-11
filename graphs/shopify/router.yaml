@@ -11,7 +11,7 @@ headers:
 persisted_queries:
   enabled: true
   safelist:
-    enabled: true
+    enabled: false
 apq:
   enabled: false
 preview_connectors:
@@ -19,3 +19,4 @@ preview_connectors:
     conditions:
       $config:
         conditionsApiKey: "${env.CONDITIONS_ACCESS_TOKEN}"
+        locationsApiKey: "${env.LOCATIONS_ACCESS_TOKEN}"
